@@ -41,6 +41,23 @@ app.post("/notes", (req, res) => {
 	})
 })
 
+//path params
+app.get('/notes/:id', (req,res)=>{
+	const id = parseInt(req.params.id)
+`	function filterCondition(note){
+		const noteId = note.id;
+		if(noteId===id){
+		console.log("Returning id ",noteId )
+		return true
+		}
+
+		console.log("removing id", noteId)
+		return false
+	}
+	const filteredNotes = notes.filter((item)=>item.id===id)
+	res.status(200).json({"success":true, data:filteredNotes})
+})
+
 app.listen(5000, () => {
     console.log("server running on http://localhost:5000")
 })
