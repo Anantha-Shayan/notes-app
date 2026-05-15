@@ -58,6 +58,18 @@ app.get('/notes/:id', (req,res)=>{
 	res.status(200).json({"success":true, data:filteredNotes})
 })
 
+app.get('/notes/query', (req,res)=>{
+	const hasText = req.query.hasText == "true";
+	const filtered = notes.filter((note)=>{
+		if(hasText){
+		 return note.text!=="";
+		}
+
+		return note.text==="";
+	})
+	res.status(200).json({"success":true, data:filtered})
+})
+
 app.listen(5000, () => {
     console.log("server running on http://localhost:5000")
 })
