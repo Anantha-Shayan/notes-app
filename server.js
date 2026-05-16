@@ -102,6 +102,33 @@ app.post('/user/login', (req,res)=>{
 		}
 })
 
+
+//middleware must be used after register and login as anyone can register and login but only authenticated users can access other features  of the app
+const authenticateToken = (req, res, next) => {
+	const authHeader = req.headers["authorization"];
+	if(!authHeader){
+		res.status(401).json({
+			success:false,
+			message: "token is required"
+		})
+	}
+
+	jwt.verify(authHeader, "secretkey", (err,user) => {
+	if(err){
+		return res.status(403).json({
+			success:false,
+			message: "Invalid token"
+		})
+	}
+
+	req.user = user;
+	next();
+	})
+}
+
+//middleware
+app.use(authenticateToken)
+
 app.get('/notes', (req, res) => {
     res.status(200).json({
         success: true,
@@ -128,7 +155,6 @@ app.post("/notes", (req, res) => {
 
 // http://localhost:8000/notes/1
 // path param
-
 app.get('/notes/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
